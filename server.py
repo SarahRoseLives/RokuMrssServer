@@ -1,4 +1,5 @@
 import sqlite3
+import uuid
 from flask import Flask, request, jsonify, render_template
 
 app = Flask(__name__)
@@ -75,6 +76,9 @@ def add_file():
         conn = sqlite3.connect(db_name)
         cursor = conn.cursor()
 
+        # Modify the guid value generation
+        guid_value = str(uuid.uuid4())
+
         try:
             cursor.execute('''
                 INSERT INTO files (
@@ -83,8 +87,9 @@ def add_file():
                     mediaContent_language, mediaSubTitle_lang, mediaSubTitle_href
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
-                media_content_url, "2022-01-16T12:00:00Z", media_title, media_description, media_category, media_thumbnail,
-                media_content_url, media_content_duration, media_content_bitrate, media_content_language, media_subtitle_lang, media_subtitle_href
+                guid_value, "2022-01-16T12:00:00Z", media_title, media_description, media_category, media_thumbnail,
+                media_content_url, media_content_duration, media_content_bitrate, media_content_language,
+                media_subtitle_lang, media_subtitle_href
             ))
 
             conn.commit()
