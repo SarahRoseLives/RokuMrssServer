@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 
 app = Flask(__name__)
 
@@ -48,22 +48,30 @@ conn.commit()
 conn.close()
 
 
+# New route to display the form for adding files
+@app.route('/add_file', methods=['GET'])
+def show_add_file_form():
+    return render_template('add_file.html')
+
+# Modify the add_file route to handle form submission
+@app.route('/add_file', methods=['POST'])
 def add_file():
-    data = request.get_json()
+    # Parse form data
+    media_title = request.form.get('mediaTitle')
+    media_description = request.form.get('mediaDescription')
+    media_category = request.form.get('mediaCategory')
+    media_thumbnail = request.form.get('mediaThumbnail')
+    media_content_url = request.form.get('mediaContentUrl')
+    media_content_duration = request.form.get('mediaContentDuration', '')  # Defaults to empty string if not provided
+    media_content_bitrate = request.form.get('mediaContentBitrate', '')  # Defaults to empty string if not provided
+    media_content_language = request.form.get('mediaContentLanguage', '')  # Defaults to empty string if not provided
+    media_subtitle_lang = request.form.get('mediaSubTitleLang', '')  # Defaults to empty string if not provided
+    media_subtitle_href = request.form.get('mediaSubTitleHref', '')  # Defaults to empty string if not provided
 
-    # Assuming the JSON payload contains the required fields
-    media_title = data.get('mediaTitle')
-    media_description = data.get('mediaDescription')
-    media_category = data.get('mediaCategory')
-    thumbnail_url = data.get('mediaThumbnail')
-    video_url = data.get('mediaContent').get('url')
-    video_duration = data.get('mediaContent').get('duration')
-    video_bitrate = data.get('mediaContent').get('bitrate')
-    video_language = data.get('mediaContent').get('language')
-    subtitle_lang = data.get('mediaSubTitle').get('lang') if data.get('mediaSubTitle') else None
-    subtitle_href = data.get('mediaSubTitle').get('href') if data.get('mediaSubTitle') else None
+    # Validate form data (add your validation logic here)
 
-    if media_title and media_description and media_category and thumbnail_url and video_url and video_duration:
+    # Your existing code for adding files...
+    if media_title and media_description and media_category and media_thumbnail and media_content_url:
         conn = sqlite3.connect(db_name)
         cursor = conn.cursor()
 
@@ -75,8 +83,8 @@ def add_file():
                     mediaContent_language, mediaSubTitle_lang, mediaSubTitle_href
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
-                video_url, "2022-01-16T12:00:00Z", media_title, media_description, media_category, thumbnail_url,
-                video_url, video_duration, video_bitrate, video_language, subtitle_lang, subtitle_href
+                media_content_url, "2022-01-16T12:00:00Z", media_title, media_description, media_category, media_thumbnail,
+                media_content_url, media_content_duration, media_content_bitrate, media_content_language, media_subtitle_lang, media_subtitle_href
             ))
 
             conn.commit()

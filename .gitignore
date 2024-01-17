@@ -1,0 +1,4 @@
+
+/.venv/
+!/file_database.db
+!/example_channel/deploy.sh
