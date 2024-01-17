@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add File Form</title>
+</head>
+<body>
+
+<h2>Add File</h2>
+
+<form id="addFileForm">
+    <label for="mediaTitle">Media Title:</label>
+    <input type="text" id="mediaTitle" name="mediaTitle" required><br>
+
+    <label for="mediaDescription">Media Description:</label>
+    <input type="text" id="mediaDescription" name="mediaDescription" required><br>
+
+    <label for="mediaCategory">Media Category:</label>
+    <input type="text" id="mediaCategory" name="mediaCategory" required><br>
+
+    <label for="thumbnailUrl">Thumbnail URL:</label>
+    <input type="text" id="thumbnailUrl" name="thumbnailUrl" required><br>
+
+    <label for="videoUrl">Video URL:</label>
+    <input type="text" id="videoUrl" name="videoUrl" required><br>
+
+    <label for="videoDuration">Video Duration:</label>
+    <input type="text" id="videoDuration" name="videoDuration" required><br>
+
+    <label for="subTitleUrl">Subtitle URL:</label>
+    <input type="text" id="subTitleUrl" name="subTitleUrl"><br>
+
+    <button type="button" onclick="addFile()">Add File</button>
+</form>
+
+<script>
+function addFile() {
+    var mediaTitle = document.getElementById("mediaTitle").value;
+    var mediaDescription = document.getElementById("mediaDescription").value;
+    var mediaCategory = document.getElementById("mediaCategory").value;
+    var thumbnailUrl = document.getElementById("thumbnailUrl").value;
+    var videoUrl = document.getElementById("videoUrl").value;
+    var videoDuration = document.getElementById("videoDuration").value;
+    var subTitleUrl = document.getElementById("subTitleUrl").value;
+
+    var payload = {
+        mediaTitle: mediaTitle,
+        mediaDescription: mediaDescription,
+        mediaCategory: mediaCategory,
+        thumbnailUrl: thumbnailUrl,
+        videoUrl: videoUrl,
+        videoDuration: videoDuration,
+        subTitleUrl: subTitleUrl
+    };
+
+    fetch('http://127.0.0.1:5000/add_file', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+</script>
+
+</body>
+</html>
